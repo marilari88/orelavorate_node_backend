@@ -4,7 +4,11 @@ const Timbratura = require("../models/timbratura");
 
 router.get("/", async (req, res) => {
   try {
-    const elencoTimbrature = await Timbratura.find();
+    const limit = parseInt(req.query.limit || "");
+    const sort = req.query.order || "";
+    const elencoTimbrature = await await Timbratura.find()
+      .sort({ ingresso: sort })
+      .limit(limit);
     res.json(elencoTimbrature);
   } catch (err) {
     res.json({ message: err });
