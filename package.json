@@ -4,7 +4,8 @@
   "description": "Backend per la gestione delle ore lavorate",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js"
+    "start": "node server.js",
+    "run": "nodemon server.js"
   },
   "author": "Marco Ilari",
   "license": "ISC",
