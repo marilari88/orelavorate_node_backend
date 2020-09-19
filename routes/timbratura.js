@@ -6,7 +6,7 @@ router.get("/", async (req, res) => {
   try {
     const limit = parseInt(req.query.limit || "");
     const sort = req.query.order || "";
-    const elencoTimbrature = await await Timbratura.find()
+    const elencoTimbrature = await Timbratura.find()
       .sort({ ingresso: sort })
       .limit(limit);
     res.json(elencoTimbrature);
