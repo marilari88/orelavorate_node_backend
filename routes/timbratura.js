@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Timbratura = require("../models/Timbratura");
+const verifyToken = require("../middlewares/verifyToken");
 
-router.get("/", async (req, res) => {
+router.get("/", verifyToken, async (req, res) => {
   try {
     const limit = parseInt(req.query.limit || "");
     const sort = req.query.order || "";
@@ -15,7 +16,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
   const timbratura = new Timbratura({
     ingresso: req.body.ingresso,
     uscita: req.body.uscita,
@@ -30,7 +31,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
   try {
     const timbratura = await Timbratura.findById(req.params.id);
     res.json(timbratura);
@@ -39,7 +40,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", verifyToken, async (req, res) => {
   try {
     const timbraturaAggiornata = await Timbratura.updateOne(
       {
@@ -57,7 +58,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", verifyToken, async (req, res) => {
   try {
     const timbraturaCancellata = await Timbratura.deleteOne({
       _id: req.params.id,

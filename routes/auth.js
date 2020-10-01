@@ -1,7 +1,8 @@
 const router = require("express").Router();
-const User = require("../models/User");
-const authSchemaValidation = require("../validation/authValidation");
 const bcrypt = require("bcrypt");
+const authSchemaValidation = require("../validation/authValidation");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
 router.post("/register", async (req, res) => {
   const { error } = authSchemaValidation.validate(req.body);
@@ -29,7 +30,7 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
-  if (!user) return res.status(400).json({ message: "Nessuna email inserita" });
+  if (!user) return res.status(400).json({ message: "Email non trovata" });
 
   const passwordValidata = await bcrypt.compare(
     req.body.password,
@@ -37,7 +38,14 @@ router.post("/login", async (req, res, next) => {
   );
   if (!passwordValidata) return res.status(400).send("Password non corretta");
 
-  res.status(200).send("Alla grande sei autenticato");
+  const token = await jwt.sign(
+    { id: user._id, name: user.name },
+    process.env.SECRET_TOKEN
+  );
+
+  res
+    .header("Authorization", `Bearer ${token}`)
+    .send("Login eseguito con Successo");
 });
 
 module.exports = router;
