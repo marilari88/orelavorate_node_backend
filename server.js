@@ -5,13 +5,15 @@ require("dotenv/config");
 const port = process.env.PORT || 5000;
 
 const timbraturaRoute = require("./routes/timbratura");
+const authRoute = require("./routes/auth");
 const mongoose = require("mongoose");
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use("/timbrature", timbraturaRoute);
+app.use("/api/v1/timbrature", timbraturaRoute);
+app.use("/api/v1/user", authRoute);
 
 mongoose.connect(
   process.env.MONGO_DB,

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Timbratura = require("../models/timbratura");
+const Timbratura = require("../models/Timbratura");
 
 router.get("/", async (req, res) => {
   try {

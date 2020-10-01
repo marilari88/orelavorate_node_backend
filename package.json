@@ -10,9 +10,11 @@
   "author": "Marco Ilari",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "joi": "^17.2.1",
     "mongoose": "^5.10.5"
   },
   "devDependencies": {
