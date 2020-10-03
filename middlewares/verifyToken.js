@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const tokenVerify = async (req, res, next) => {
-  const authorizationHeader = req.header("Authorization");
+  const authorizationHeader = req.header("authorization");
   try {
     const token = authorizationHeader.split(" ")[1];
     const tokenVerificato = jwt.verify(token, process.env.SECRET_TOKEN);
@@ -8,7 +8,7 @@ const tokenVerify = async (req, res, next) => {
     req.user = tokenVerificato;
   } catch (err) {
     return res.status(401).send("Accesso negato");
-  }
+  } 
 
   next();
 };

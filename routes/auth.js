@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const authSchemaValidation = require("../validation/authValidation");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const verifyToken = require("../middlewares/verifyToken");
 
 router.post("/register", async (req, res) => {
   const { error } = authSchemaValidation.validate(req.body);
@@ -30,15 +31,16 @@ router.post("/register", async (req, res) => {
 
 router.post("/login", async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
-  if (!user) return res.status(400).json({ message: "Email non trovata" });
+  if (!user) return res.status(400).json({ error: "Email non trovata" });
 
   const passwordValidata = await bcrypt.compare(
     req.body.password,
     user.password
   );
-  if (!passwordValidata) return res.status(400).send("Password non corretta");
+  if (!passwordValidata)
+    return res.status(400).json({ error: "Password non corretta" });
 
-  const token = await jwt.sign(
+  const token = jwt.sign(
     { id: user._id, name: user.name },
     process.env.SECRET_TOKEN
   );
@@ -46,6 +48,11 @@ router.post("/login", async (req, res, next) => {
   res
     .header("Authorization", `Bearer ${token}`)
     .send("Login eseguito con Successo");
+});
+
+router.get("/checktoken", verifyToken, async (req, res) => {
+  console.log("controllo del token in corso");
+  if (req.user) res.status(200).json({ user: req.user });
 });
 
 module.exports = router;

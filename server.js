@@ -12,8 +12,8 @@ app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use("/api/v1/timbrature", timbraturaRoute);
 app.use("/api/v1/user", authRoute);
+app.use("/api/v1/timbrature", timbraturaRoute);
 
 mongoose.connect(
   process.env.MONGO_DB,
