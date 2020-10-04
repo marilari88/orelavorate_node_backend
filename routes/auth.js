@@ -46,8 +46,8 @@ router.post("/login", async (req, res, next) => {
   );
 
   res
-    .header("Authorization", `Bearer ${token}`)
-    .send("Login eseguito con Successo");
+    .status(200)
+    .json({ message: "Login eseguito con Successo", token: token });
 });
 
 router.get("/checktoken", verifyToken, async (req, res) => {
