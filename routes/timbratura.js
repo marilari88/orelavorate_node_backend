@@ -23,7 +23,6 @@ router.post("/", verifyToken, async (req, res) => {
     differenza: req.body.differenza,
     userId: req.user.id,
   });
-  console.log(timbratura);
   try {
     const result = await timbratura.save();
     res.json(result);
