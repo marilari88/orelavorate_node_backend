@@ -45,13 +45,14 @@ router.post("/login", async (req, res, next) => {
     process.env.SECRET_TOKEN
   );
 
-  res
-    .status(200)
-    .json({ message: "Login eseguito con Successo", token: token });
+  res.status(200).json({
+    message: "Login eseguito con Successo",
+    token: token,
+    user: { id: user.id, name: user.name },
+  });
 });
 
 router.get("/checktoken", verifyToken, async (req, res) => {
-  console.log("controllo del token in corso");
   if (req.user) res.status(200).json({ user: req.user });
 });
 
