@@ -4,6 +4,7 @@ const authSchemaValidation = require("../validation/authValidation");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const verifyToken = require("../middlewares/verifyToken");
+const { OAuth2Client } = require("google-auth-library");
 
 router.post("/register", async (req, res) => {
   const { error } = authSchemaValidation.validate(req.body);
@@ -50,6 +51,27 @@ router.post("/login", async (req, res, next) => {
     token: token,
     user: { id: user.id, name: user.name },
   });
+});
+
+router.post("/googlelogin", async (req, res, next) => {
+  const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+  const tokenId = req.body.tokenid;
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: tokenId,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const userid = payload["sub"];
+
+    res.status(200).json({
+      message: "Login eseguito con Successo",
+      token: payload,
+      userid: userid,
+    });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 router.get("/checktoken", verifyToken, async (req, res) => {
