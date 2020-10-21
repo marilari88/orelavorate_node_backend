@@ -18,6 +18,12 @@ const userSchema = mongoose.Schema({
     min: 5,
     max: 255,
   },
+  picture: {
+    type: String,
+  },
+  googleOAuth: {
+    type: Boolean,
+  },
   date: {
     type: Date,
     default: Date.now,
