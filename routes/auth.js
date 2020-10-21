@@ -45,14 +45,14 @@ router.post("/login", async (req, res, next) => {
     return res.status(400).json({ error: "Password non corretta" });
 
   const token = jwt.sign(
-    { id: user._id, name: user.name },
+    { id: user._id, name: user.name, email: user.email, picture: user.picture },
     process.env.SECRET_TOKEN
   );
 
   res.status(200).json({
     message: "Login eseguito con Successo",
     token: token,
-    user: { id: user.id, name: user.name },
+    user: { id: user.id, name: user.name, email: user.email },
   });
 });
 
@@ -74,14 +74,24 @@ router.post("/googlelogin", async (req, res) => {
   const userExist = await User.findOne({ email: email });
   if (userExist) {
     const token = jwt.sign(
-      { id: userExist._id, name: userExist.name },
+      {
+        id: userExist._id,
+        name: userExist.name,
+        email: userExist.email,
+        picture: userExist.picture,
+      },
       process.env.SECRET_TOKEN
     );
 
     res.status(200).json({
       message: "Login eseguito con Successo",
       token: token,
-      user: { id: userExist.id, name: userExist.name },
+      user: {
+        id: userExist.id,
+        name: userExist.name,
+        email: userExist.email,
+        picture: userExist.picture,
+      },
     });
   } else {
     const salt = await bcrypt.genSalt();
@@ -105,7 +115,12 @@ router.post("/googlelogin", async (req, res) => {
       res.status(200).json({
         message: "Login eseguito con Successo",
         token: token,
-        user: { id: savedUser.id, name: savedUser.name },
+        user: {
+          id: savedUser.id,
+          name: savedUser.name,
+          email: savedUser.email,
+          picture: savedUser.picture,
+        },
       });
     } catch (error) {
       res.status(400).json({ error: `Registrazione non riuscita: ${error}` });
