@@ -11,6 +11,8 @@ const TimbraturaSchema = mongoose.Schema(
       ref: "User",
       required: true,
     },
+    ingressoManuale: { type: Boolean, default: false },
+    uscitaManuale: { type: Boolean, default: false },
     createdAt: {
       type: Date,
       default: Date.now,

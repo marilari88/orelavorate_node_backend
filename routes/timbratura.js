@@ -22,6 +22,8 @@ router.post("/", verifyToken, async (req, res) => {
     uscita: req.body.uscita,
     differenza: req.body.differenza,
     userId: req.user.id,
+    ingressoManuale: req.user.ingressoManuale,
+    uscitaManuale: req.user.uscitaManuale,
   });
   try {
     const result = await timbratura.save();
@@ -60,6 +62,8 @@ router.put("/:id", verifyToken, async (req, res) => {
         ingresso: req.body.ingresso,
         uscita: req.body.uscita,
         differenza: req.body.differenza,
+        ingressoManuale: req.body.ingressoManuale,
+        uscitaManuale: req.body.uscitaManuale,
       }
     );
     res.json(timbraturaAggiornata);
