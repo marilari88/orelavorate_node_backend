@@ -6,9 +6,9 @@ const TimbraturaSchema = mongoose.Schema(
     ingresso: { type: Date, required: true },
     uscita: Date,
     differenza: String,
-    userId: {
+    contrattoId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Contratto",
       required: true,
     },
     ingressoManuale: { type: Boolean, default: false },
