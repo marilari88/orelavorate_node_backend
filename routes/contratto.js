@@ -10,7 +10,7 @@ router.get("/", verifyToken, async (req, res) => {
     const elencoContratti = await Contratto.find({ userId: req.user.id })
       .sort({ inizioContratto: sort })
       .limit(limit);
-    res.json({ data: elencoContratti });
+    res.json(elencoContratti);
   } catch (err) {
     res.json({ message: err });
   }
