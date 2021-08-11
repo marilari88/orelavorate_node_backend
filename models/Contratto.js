@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const ContrattoSchema = mongoose.Schema(
   {
-    nomeContratto: { type: Date, required: true },
+    nomeContratto: { type: String, required: true },
     nomeAzienda: { type: String, required: true },
     inizioContratto: { type: Date, required: true },
     fineContratto: Date,
