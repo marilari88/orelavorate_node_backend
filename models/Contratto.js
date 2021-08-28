@@ -16,6 +16,6 @@ const ContrattoSchema = mongoose.Schema(
       default: Date.now,
     },
   },
-  { collection: "contratto" }
+  { collection: "contratti" }
 );
-module.exports = mongoose.model("contratto", ContrattoSchema);
+module.exports = mongoose.model("contratti", ContrattoSchema);
