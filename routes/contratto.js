@@ -28,6 +28,7 @@ router.post("/", verifyToken, async (req, res) => {
     const result = await contratto.save();
     res.json(result);
   } catch (err) {
+    res.status(400);
     res.json({ error: err });
   }
 });
@@ -53,7 +54,7 @@ router.put("/:id", verifyToken, async (req, res) => {
         .status(401)
         .json({ error: "Non sei autorizzato a modificare questa risorsa" });
 
-    const contrattoAggiornato = await Contratto.updateOne(
+    const contrattoAggiornato = await Contratto.findByIdAndUpdate(
       {
         _id: req.params.id,
       },
@@ -63,6 +64,10 @@ router.put("/:id", verifyToken, async (req, res) => {
         inizioContratto: req.body.inizioContratto,
         fineContratto: req.body.fineContratto,
         userId: req.user.id,
+      },
+      {
+        new: true,
+        lean: true,
       }
     );
     res.json(contrattoAggiornato);
