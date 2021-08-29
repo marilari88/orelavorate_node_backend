@@ -8,7 +8,7 @@ const TimbraturaSchema = mongoose.Schema(
     differenza: String,
     contrattoId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Contratto",
+      ref: "contratti",
       required: true,
     },
     ingressoManuale: { type: Boolean, default: false },

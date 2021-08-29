@@ -45,7 +45,13 @@ router.post("/login", async (req, res, next) => {
     return res.status(400).json({ error: "Password non corretta" });
 
   const token = jwt.sign(
-    { id: user._id, name: user.name, email: user.email, picture: user.picture },
+    {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      picture: user.picture,
+      contrattoSelezionato: user.contrattoSelezionato,
+    },
     process.env.SECRET_TOKEN
   );
 
@@ -79,6 +85,7 @@ router.post("/googlelogin", async (req, res) => {
         name: userExist.name,
         email: userExist.email,
         picture: userExist.picture,
+        contrattoSelezionato: userExist.contrattoSelezionato,
       },
       process.env.SECRET_TOKEN
     );
@@ -91,6 +98,7 @@ router.post("/googlelogin", async (req, res) => {
         name: userExist.name,
         email: userExist.email,
         picture: userExist.picture,
+        contrattoSelezionato: userExist.contrattoSelezionato,
       },
     });
   } else {
@@ -130,6 +138,24 @@ router.post("/googlelogin", async (req, res) => {
 
 router.get("/checktoken", verifyToken, async (req, res) => {
   if (req.user) res.status(200).json({ user: req.user });
+});
+
+router.put("/contratto", verifyToken, async (req, res) => {
+  try {
+    const userAggiornato = await User.findByIdAndUpdate(
+      { _id: req.user.id },
+      {
+        $set: { contrattoSelezionato: req.body.contrattoSelezionato },
+      },
+      {
+        new: true,
+        lean: true,
+      }
+    );
+    res.status(200).json(userAggiornato);
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
 });
 
 module.exports = router;

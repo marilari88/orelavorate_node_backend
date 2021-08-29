@@ -8,7 +8,7 @@ router.get("/", verifyToken, async (req, res) => {
     const limit = parseInt(req.query.limit || "");
     const sort = req.query.order || "";
     const elencoTimbrature = await Timbratura.find({
-      contrattoId: req.contratto.id,
+      contrattoId: req.user.contrattoSelezionato,
     })
       .sort({ ingresso: sort })
       .limit(limit);

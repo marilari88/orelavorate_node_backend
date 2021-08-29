@@ -8,7 +8,7 @@ const ContrattoSchema = mongoose.Schema(
     fineContratto: Date,
     userId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "user",
       required: true,
     },
     createdAt: {

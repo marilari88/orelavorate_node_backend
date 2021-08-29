@@ -28,5 +28,10 @@ const userSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  contrattoSelezionato: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "contratto",
+    required: false,
+  },
 });
 module.exports = mongoose.model("user", userSchema);
