@@ -58,7 +58,12 @@ router.post("/login", async (req, res, next) => {
   res.status(200).json({
     message: "Login eseguito con Successo",
     token: token,
-    user: { id: user.id, name: user.name, email: user.email },
+    user: {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      contrattoSelezionato: user.contrattoSelezionato,
+    },
   });
 });
 
@@ -152,7 +157,17 @@ router.put("/contratto", verifyToken, async (req, res) => {
         lean: true,
       }
     );
-    res.status(200).json(userAggiornato);
+    const token = jwt.sign(
+      {
+        id: userAggiornato._id,
+        name: userAggiornato.name,
+        email: userAggiornato.email,
+        picture: userAggiornato.picture,
+        contrattoSelezionato: userAggiornato.contrattoSelezionato,
+      },
+      process.env.SECRET_TOKEN
+    );
+    res.status(200).json({ user: userAggiornato, token: token });
   } catch (err) {
     res.status(400).json({ message: err });
   }

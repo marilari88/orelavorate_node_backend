@@ -5,6 +5,8 @@ const verifyToken = require("../middlewares/verifyToken");
 
 router.get("/", verifyToken, async (req, res) => {
   try {
+    if (!req.user.contrattoSelezionato)
+      throw new Error("Nessun contratto selezionato");
     const limit = parseInt(req.query.limit || "");
     const sort = req.query.order || "";
     const elencoTimbrature = await Timbratura.find({
@@ -12,9 +14,9 @@ router.get("/", verifyToken, async (req, res) => {
     })
       .sort({ ingresso: sort })
       .limit(limit);
-    res.json(elencoTimbrature);
+    res.status(200).json(elencoTimbrature);
   } catch (err) {
-    res.json({ message: err });
+    res.status(400).json({ message: err });
   }
 });
 
@@ -23,7 +25,7 @@ router.post("/", verifyToken, async (req, res) => {
     ingresso: req.body.ingresso,
     uscita: req.body.uscita,
     differenza: req.body.differenza,
-    contrattoId: req.contratto.id,
+    contrattoId: req.user.contrattoSelezionato,
     ingressoManuale: req.body.ingressoManuale,
     uscitaManuale: req.body.uscitaManuale,
   });
@@ -38,7 +40,7 @@ router.post("/", verifyToken, async (req, res) => {
 router.get("/:id", verifyToken, async (req, res) => {
   try {
     const timbratura = await Timbratura.findById(req.params.id);
-    if (timbratura.contrattoId != req.contratto.id)
+    if (timbratura.contrattoId != req.user.contrattoSelezionato)
       return res
         .status(401)
         .json({ error: "Non sei autorizzato a visualizzare questa risorsa" });
@@ -51,7 +53,7 @@ router.get("/:id", verifyToken, async (req, res) => {
 router.put("/:id", verifyToken, async (req, res) => {
   try {
     const timbratura = await Timbratura.findById(req.params.id);
-    if (timbratura.contrattoId != req.contratto.id)
+    if (timbratura.contrattoId != req.user.contrattoSelezionato)
       return res
         .status(401)
         .json({ error: "Non sei autorizzato a modificare questa risorsa" });
@@ -64,6 +66,7 @@ router.put("/:id", verifyToken, async (req, res) => {
         ingresso: req.body.ingresso,
         uscita: req.body.uscita,
         differenza: req.body.differenza,
+        contrattoId: req.user.contrattoSelezionato,
         ingressoManuale: req.body.ingressoManuale,
         uscitaManuale: req.body.uscitaManuale,
       }
@@ -76,7 +79,7 @@ router.put("/:id", verifyToken, async (req, res) => {
 
 router.delete("/:id", verifyToken, async (req, res) => {
   const timbratura = await Timbratura.findById(req.params.id);
-  if (timbratura.contrattoId != req.contratto.id)
+  if (timbratura.contrattoId != req.user.contrattoSelezionato)
     return res
       .status(401)
       .json({ error: "Non sei autorizzato a visualizzare questa risorsa" });
