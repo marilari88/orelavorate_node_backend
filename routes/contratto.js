@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Contratto = require("../models/Contratto");
 const verifyToken = require("../middlewares/verifyToken");
+const contrattoSchemaValidation = require("../validation/contrattoValidation");
 
 router.get("/", verifyToken, async (req, res) => {
   try {
@@ -17,19 +18,24 @@ router.get("/", verifyToken, async (req, res) => {
 });
 
 router.post("/", verifyToken, async (req, res) => {
-  const contratto = new Contratto({
+  const datiContratto = {
     nomeContratto: req.body.nomecontratto,
     nomeAzienda: req.body.nomeazienda,
     inizioContratto: req.body.inizioContratto,
     fineContratto: req.body.fineContratto,
     userId: req.user.id,
-  });
+  };
   try {
+    const { error } = contrattoSchemaValidation.validate(datiContratto);
+    if (error) throw error.details[0].message;
+
+    const contratto = new Contratto(datiContratto);
+
     const result = await contratto.save();
+
     res.json(result);
   } catch (err) {
-    res.status(400);
-    res.json({ error: err });
+    res.status(400).json({ error: err });
   }
 });
 
@@ -54,25 +60,25 @@ router.put("/:id", verifyToken, async (req, res) => {
         .status(401)
         .json({ error: "Non sei autorizzato a modificare questa risorsa" });
 
+    const datiContratto = {
+      nomeContratto: req.body.nomecontratto,
+      nomeAzienda: req.body.nomeazienda,
+      inizioContratto: req.body.inizioContratto,
+      fineContratto: req.body.fineContratto,
+      userId: req.user.id,
+    };
+
+    const { error } = contrattoSchemaValidation.validate(datiContratto);
+    if (error) throw error.details[0].message;
+
     const contrattoAggiornato = await Contratto.findByIdAndUpdate(
-      {
-        _id: req.params.id,
-      },
-      {
-        nomeContratto: req.body.nomecontratto,
-        nomeAzienda: req.body.nomeazienda,
-        inizioContratto: req.body.inizioContratto,
-        fineContratto: req.body.fineContratto,
-        userId: req.user.id,
-      },
-      {
-        new: true,
-        lean: true,
-      }
+      { _id: req.params.id },
+      datiContratto,
+      { new: true, lean: true }
     );
-    res.json(contrattoAggiornato);
+    res.status(200).json(contrattoAggiornato);
   } catch (err) {
-    res.json({ message: err });
+    res.status(400).json({ error: err });
   }
 });
 
