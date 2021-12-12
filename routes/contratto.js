@@ -23,6 +23,7 @@ router.post("/", verifyToken, async (req, res) => {
     nomeAzienda: req.body.nomeazienda,
     inizioContratto: req.body.inizioContratto,
     fineContratto: req.body.fineContratto,
+    orePrevisteContratto: req.body.orePrevisteContratto,
     userId: req.user.id,
   };
   try {
@@ -65,6 +66,8 @@ router.put("/:id", verifyToken, async (req, res) => {
       nomeAzienda: req.body.nomeazienda,
       inizioContratto: req.body.inizioContratto,
       fineContratto: req.body.fineContratto,
+      orePrevisteContratto: req.body.orePrevisteContratto,
+      oreLavorateContratto: req.body.oreLavorateContratto,
       userId: req.user.id,
     };
 

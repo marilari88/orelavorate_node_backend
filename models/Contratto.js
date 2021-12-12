@@ -6,6 +6,8 @@ const ContrattoSchema = mongoose.Schema(
     nomeAzienda: { type: String, required: true },
     inizioContratto: { type: Date, required: true },
     fineContratto: Date,
+    orePrevisteContratto: Number,
+    oreLavorateContratto: Number,
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",

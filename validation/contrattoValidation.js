@@ -4,6 +4,8 @@ const contrattoSchemaValidation = Joi.object({
   nomeAzienda: Joi.string().min(2).max(40).required(),
   inizioContratto: Joi.date().required(),
   fineContratto: Joi.date(),
+  orePrevisteContratto: Joi.number(),
+  oreLavorateContratto: Joi.number(),
   userId: Joi.string().required(),
 });
 module.exports = contrattoSchemaValidation;
